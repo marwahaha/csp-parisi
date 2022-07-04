@@ -71,13 +71,14 @@ def get_fourier_poly(k, inp):
     xs = generate_variables(k)
     out = 0
     for i in range(len(inp)):
-        out += (2*int(inp[i]) - 1) * get_indicator_poly(k, get_0101_from_num(k, i), xs)
+        val = int(inp[i]) #0/1 ... if we want -1/+1 then use 2*int - 1
+        out += val * get_indicator_poly(k, get_0101_from_num(k, i), xs)
     return sympy.expand(sympy.simplify(sympy.expand(out)))
 
-assert str(get_fourier_poly(3, '00100000')) == 'x1*x2*x3/4 - x1*x2/4 + x1*x3/4 - x1/4 - x2*x3/4 + x2/4 - x3/4 - 3/4'
+assert str(get_fourier_poly(3, '00100000')) == 'x1*x2*x3/8 - x1*x2/8 + x1*x3/8 - x1/8 - x2*x3/8 + x2/8 - x3/8 + 1/8'
 
 
-def get_fourier_levels_from_poly(k, fourier_poly):
+def get_fourier_weights_from_poly(k, fourier_poly):
     """
     Returns |f_{=j}|^2 for each j,
     for 0 <= j <= k,
@@ -89,11 +90,11 @@ def get_fourier_levels_from_poly(k, fourier_poly):
     out = [0]*(k+1)
     for (m, c) in zip(poly.monoms(), poly.coeffs()):
         out[sum(m)] += c**2
-    assert sum(out) == 1, "fourier levels must sum to 1"
+    # assert sum(out) == 1, "fourier weights must sum to 1"
     return out
 
-assert get_fourier_levels_from_poly(4, get_fourier_poly(4, '1111111111111110')) == [49/64, 1/16, 3/32, 1/16, 1/64]
+assert get_fourier_weights_from_poly(4, get_fourier_poly(4, '1111111111111110')) == [225/256, 1/64, 3/128, 1/64, 1/256]
 
 
-def get_fourier_levels(k, inp):
-    return get_fourier_levels_from_poly(k, get_fourier_poly(k, inp))
+def get_fourier_weights(k, inp):
+    return get_fourier_weights_from_poly(k, get_fourier_poly(k, inp))
