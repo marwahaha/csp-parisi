@@ -17,4 +17,7 @@ python -i get_fourier_weights.py
 >>> get_fourier_weights(k, inp)  # outputs Fourier weights
 ```
 
-Note: this assumes the predicate has codomain $\{\pm 1\}$. If you need $\{0,1\}$ output, divide all nonzero Fourier weights by 4. (The weight at zero is the square of the average value of the function.)
+#### Note
+This assumes the predicate has codomain ${-1, +1}$. 
+If you need ${0,1}$ output, divide all nonzero Fourier weights by 4. 
+(The weight at zero is the square of the average value of the function.)
