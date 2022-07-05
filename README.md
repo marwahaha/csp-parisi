@@ -81,3 +81,15 @@ The mixture function does not include $c_0$, so the 0th entry of `C_p_squared` i
 This code optimizes over piecewise constant functions with $r$ jumps.
 Be careful! The runtime is $ \Omega( num_pts^{r+1} ) $.
 This example above may take 15 minutes on a laptop.
+
+### Get values for all Boolean predicates with up to 3 variables
+
+```python
+for k in range(1, 4):
+    print("Predicates of", k, "variables")
+    for i in range(2**(2**k)):
+        inp = get_0101_from_num(2**k, i)
+        print(inp)
+        calculate_csp_value(k, inp)
+```
+This takes 5-10 minutes on a laptop.
