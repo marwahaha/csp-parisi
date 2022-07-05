@@ -4,8 +4,6 @@ This Python code calculates the average satisfying fraction of a random sparse C
 
 packages required: SymPy, NumPy, SciPy
 
-## Usage
-
 ```bash
 python -i csp_parisi.py
 ```

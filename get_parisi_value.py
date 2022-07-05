@@ -161,9 +161,6 @@ def parisi_one_jump_approx(C_p_squared, print_output = False):
     This is a reasonable approximation to known values:
         >99.7% close for Max 2XOR/MaxCut
         >99.95% close for Max 3XOR
-
-    reference for known values:
-    https://arxiv.org/pdf/2009.11481.pdf
     """
 
     r = 1
@@ -180,7 +177,12 @@ def parisi_one_jump_approx(C_p_squared, print_output = False):
 def verify_parisi_one_jump_accuracy():
     """
     Code that asserts the accuracy claims made above.
+
+    reference for known values:
+    https://arxiv.org/pdf/2009.11481.pdf
     """
+    print("Claim: Max 2XOR is 99.7% accurate.")
     assert np.isclose(parisi_one_jump_approx([0, 0, 1/2]), 0.763168, rtol=3e-3), "Max 2XOR is not 99.7% accurate"
+    print("Claim: Max 3XOR is 99.95% accurate.")
     assert np.isclose(parisi_one_jump_approx([0, 0, 0, 1/2]), 0.8132, rtol=5e-4), "Max 3XOR is not 99.95% accurate"
     print("Claims are correct.")
