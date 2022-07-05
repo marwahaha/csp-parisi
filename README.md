@@ -33,8 +33,8 @@ Some methods you may also want to use are defined below:
 **Note**:
 This assumes the predicate has codomain ${-1, +1}$.
 If you need ${0,1}$ output:
-* divide all nonzero Fourier weights by 4.
-* The weight at zero is the square of the average value of the function. You can use `average_value_pm_one(inp)` to calculate it.
+* Divide all nonzero Fourier weights by 4.
+* The weight at zero is the square of the average value of the function. You can use `average_value_zero_one(inp)` to calculate the average value.
 
 
 ### Get approximate Parisi value, given list of mixture function coefficients $[c_0^2, c_1^2,...]$
