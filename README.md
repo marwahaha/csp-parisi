@@ -12,6 +12,8 @@ cd csp-parisi
 python -i csp_parisi.py
 ```
 
+## Usage
+
 To get the value of a random CSP with Boolean predicate $f$:
 
 ```python
