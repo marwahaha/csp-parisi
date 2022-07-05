@@ -58,7 +58,7 @@ parisi_one_jump_approx(C_p_squared) # outputs Parisi value
 The mixture function does not include $c_0$, so the 0th entry of `C_p_squared` is ignored.
 
 This code only optimizes over piecewise constant functions with one jump.
-It is reasonably fast (~10 seconds to run), and is >99.5% accurate on known results.
+It is reasonably fast (~1 second to run), and is >99.5% accurate on known results.
 You can run `verify_parisi_one_jump_accuracy()` to double-check the accuracy claims.
 
 
