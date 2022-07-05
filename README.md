@@ -55,7 +55,7 @@ C_p_squared = [0, 0, 0, 1/2]
 parisi_one_jump_approx(C_p_squared) # outputs Parisi value
 ```
 
-The mixture function does not include $c_0$, so the 0th entry of C_p_squared is ignored.
+The mixture function does not include $c_0$, so the 0th entry of `C_p_squared` is ignored.
 
 This code only optimizes over piecewise constant functions with one jump.
 It is reasonably fast (~10 seconds to run), and is >99.5% accurate on known results.
@@ -76,7 +76,7 @@ num_pts = 500   # approximate Gaussian integral with 500 points
 parisi_minimize(C_p_squared, r, max_z, num_pts) # outputs Parisi value
 ```
 
-The mixture function does not include $c_0$, so the 0th entry of C_p_squared is ignored.
+The mixture function does not include $c_0$, so the 0th entry of `C_p_squared` is ignored.
 
 This code optimizes over piecewise constant functions with $r$ jumps.
 Be careful! The runtime is $ \Omega( num_pts^{r+1} ) $.
