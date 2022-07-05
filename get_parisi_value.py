@@ -143,8 +143,17 @@ def parisi_minimize(C_p_squared, r, max_z, num_pts):
     C_p_squared = C_p_squared.copy()
     C_p_squared[0] = 0
 
+    # make sure input is valid
+    for val in C_p_squared:
+        assert val >= 0, "all entries of C_p_squared must be non-negative"
+
     _, xiprime, _, t_times_xiprimeprime = generate_xi_functions(C_p_squared)
     calculator = make_parisi_calculator(xiprime, t_times_xiprimeprime, r)
+
+    # if calculator is zero, then use zero function
+    if sum(C_p_squared[:2]) == sum(C_p_squared):
+        calculator = lambda *args: 0
+
     return minimize(calculator,
                     [np.random.random()/r for _ in range(2*r)],
                     method='Powell',
@@ -171,7 +180,7 @@ def parisi_one_jump_approx(C_p_squared, print_output = False):
         print("best adjustments:", opt.x)
         print("Parisi value:", opt.fun)
 
-    return opt.fun
+    return float(opt.fun)
 
 
 def verify_parisi_one_jump_accuracy():
