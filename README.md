@@ -42,7 +42,7 @@ If you need ${0,1}$ output:
 * The weight at zero is the square of the average value of the function. You can use `average_value_zero_one(inp)` to calculate the average value.
 
 
-### Get approximate Parisi value, given list of mixture function coefficients $[c_0^2, c_1^2,...]$
+### Get approximate Parisi value, given list of mixture function coefficients $[_, c_1^2, c_2^2, ...]$
 
 ```bash
 python -i get_parisi_value.py
@@ -53,11 +53,14 @@ C_p_squared = [0, 0, 0, 1/2]
 >>> parisi_one_jump_approx(C_p_squared) # outputs Parisi value
 ```
 
+The mixture function does not include $c_0$, so the 0th entry of C_p_squared is ignored.
+
 This code only optimizes over piecewise constant functions with one jump.
 It is reasonably fast (~10 seconds to run), and is >99.5% accurate on known results.
 You can run `verify_parisi_one_jump_accuracy()` to double-check the accuracy claims.
 
-### Get more accurate Parisi value, given list of mixture function coefficients $[c_0^2, c_1^2,...]$
+
+### Get more accurate Parisi value, given list of mixture function coefficients $[_, c_1^2, c_2^2, ...]$
 
 ```bash
 python -i get_parisi_value.py
@@ -70,6 +73,8 @@ max_z = 20      # approximate Gaussian integral from -20σ to 20σ
 num_pts = 500   # approximate Gaussian integral with 500 points
 >>> parisi_minimize(C_p_squared, r, max_z, num_pts) # outputs Parisi value
 ```
+
+The mixture function does not include $c_0$, so the 0th entry of C_p_squared is ignored.
 
 This code optimizes over piecewise constant functions with $r$ jumps.
 Be careful! The runtime is $ \Omega( num_pts^{r+1} ) $.
