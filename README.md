@@ -42,7 +42,7 @@ If you need ${0,1}$ output:
 * The weight at zero is the square of the average value of the function. You can use `average_value_zero_one(inp)` to calculate the average value.
 
 
-### Get approximate Parisi value, given list of mixture function coefficients $[_, c_1^2, c_2^2, ...]$
+### Get approximate Parisi value, given list of mixture function coefficients $[-, c_1^2, c_2^2, ...]$
 
 ```bash
 python -i get_parisi_value.py
@@ -60,7 +60,7 @@ It is reasonably fast (~10 seconds to run), and is >99.5% accurate on known resu
 You can run `verify_parisi_one_jump_accuracy()` to double-check the accuracy claims.
 
 
-### Get more accurate Parisi value, given list of mixture function coefficients $[_, c_1^2, c_2^2, ...]$
+### Get more accurate Parisi value, given list of mixture function coefficients $[-, c_1^2, c_2^2, ...]$
 
 ```bash
 python -i get_parisi_value.py
