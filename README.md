@@ -10,17 +10,16 @@ packages required: SymPy, NumPy, SciPy
 python -i csp_parisi.py
 ```
 
-To get the maximum satisfying fraction of a Boolean predicate $f$:
+To get the maximum satisfying fraction of a CSP with Boolean predicate $f$:
 
 ```python
 >>> k = 3             # number of variables
 >>> inp = '01111111'  # specifies 1=T, 0=F for a predicate
 >>> get_truth_table(k, inp)
->>> weights = get_fourier_weights(k, inp)
->>> value = parisi_one_jump_approx(weights)
+>>> calculate_csp_value(k, inp)
 ```
 
-How this works is defined below:
+Some methods you may also want to use are defined below:
 
 
 ### Get Fourier weights $[|f_{=0}|^2,...,|f_{=k}|^2]$ of a Boolean predicate $f$
@@ -35,8 +34,9 @@ How this works is defined below:
 
 **Note**:
 This assumes the predicate has codomain ${-1, +1}$.
-If you need ${0,1}$ output, divide all nonzero Fourier weights by 4.
-(The weight at zero is the square of the average value of the function.)
+If you need ${0,1}$ output:
+* divide all nonzero Fourier weights by 4.
+* The weight at zero is the square of the average value of the function. You can use `average_value_pm_one(inp)` to calculate it.
 
 
 ### Get approximate Parisi value, given list of mixture function coefficients $[c_0^2, c_1^2,...]$

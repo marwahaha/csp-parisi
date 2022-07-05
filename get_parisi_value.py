@@ -176,6 +176,7 @@ def parisi_one_jump_approx(C_p_squared, print_output = False):
 
     return opt.fun
 
+
 def verify_parisi_one_jump_accuracy():
     """
     Code that asserts the accuracy claims made above.

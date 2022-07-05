@@ -40,7 +40,7 @@ assert get_truth_table(4, '0'*15 + '1') == { '0000': 0,
 
 def generate_variables(k):
     """
-    Generate Sympy variables, from x1 to xk.
+    Generate SymPy variables, from x1 to xk.
     """
     return [sympy.Symbol('x' + str(i+1)) for i in range(k)]
 
@@ -71,11 +71,10 @@ def get_fourier_poly(k, inp):
     xs = generate_variables(k)
     out = 0
     for i in range(len(inp)):
-        val = int(inp[i]) #0/1 ... if we want -1/+1 then use 2*int - 1
-        out += val * get_indicator_poly(k, get_0101_from_num(k, i), xs)
+        out += (2*int(inp[i]) - 1) * get_indicator_poly(k, get_0101_from_num(k, i), xs)
     return sympy.expand(sympy.simplify(sympy.expand(out)))
 
-assert str(get_fourier_poly(3, '00100000')) == 'x1*x2*x3/8 - x1*x2/8 + x1*x3/8 - x1/8 - x2*x3/8 + x2/8 - x3/8 + 1/8'
+assert str(get_fourier_poly(3, '00100000')) == 'x1*x2*x3/4 - x1*x2/4 + x1*x3/4 - x1/4 - x2*x3/4 + x2/4 - x3/4 - 3/4'
 
 
 def get_fourier_weights_from_poly(k, fourier_poly):
@@ -89,11 +88,11 @@ def get_fourier_weights_from_poly(k, fourier_poly):
     poly = sympy.Poly(fourier_poly)
     out = [0]*(k+1)
     for (m, c) in zip(poly.monoms(), poly.coeffs()):
-        out[sum(m)] += c**2
-    # assert sum(out) == 1, "fourier weights must sum to 1"
+        out[sum(m)] += float(c**2) # convert from SymPy to number
+    assert abs(sum(out) - 1) < 1e-12, "fourier weights must sum to 1"
     return out
 
-assert get_fourier_weights_from_poly(4, get_fourier_poly(4, '1111111111111110')) == [225/256, 1/64, 3/128, 1/64, 1/256]
+assert get_fourier_weights_from_poly(4, get_fourier_poly(4, '1111111111111110')) == [49/64, 1/16, 3/32, 1/16, 1/64]
 
 
 def get_fourier_weights(k, inp):
