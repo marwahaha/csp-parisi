@@ -12,7 +12,7 @@ cd csp-parisi
 python -i csp_parisi.py
 ```
 
-To get the maximum satisfying fraction of a CSP with Boolean predicate $f$:
+To get the value of a random CSP with Boolean predicate $f$:
 
 ```python
 >>> k = 3             # number of variables
@@ -20,6 +20,7 @@ To get the maximum satisfying fraction of a CSP with Boolean predicate $f$:
 >>> get_truth_table(k, inp)
 >>> calculate_csp_value(k, inp)
 ```
+When the output is ${0,1}$, the value is the maximum satisfying fraction of the CSP.
 
 Some methods you may also want to use are defined below:
 
