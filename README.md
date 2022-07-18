@@ -82,7 +82,10 @@ This code optimizes over piecewise constant functions with $r$ jumps.
 Be careful! The runtime is $ \Omega( num_pts^{r+1} ) $.
 This example above may take 15 minutes on a laptop.
 
-### Get values for all Boolean predicates with up to 3 variables
+### Get values for all Boolean predicates
+
+This enumerates through all truth tables.
+Running up through $k=3$ takes 5-10 minutes on a laptop.
 
 ```python
 for k in range(1, 4):
@@ -92,4 +95,18 @@ for k in range(1, 4):
         print(inp)
         calculate_csp_value(k, inp)
 ```
-This takes 5-10 minutes on a laptop.
+
+The following enumerates through symmetric predicates; i.e. those that depend only on Hamming weight.
+
+```python
+for k in range(1, 6):
+    print("Predicates of", k, "variables")
+    lookup = [sum([int(i) for i in get_0101_from_num(k, num)]) for num in range(2**k)]
+    for i in range(2**(k+1)):
+        on_off_list = get_0101_from_num(k+1, i)
+        print('on off:', on_off_list)
+        inp = ''.join([on_off_list[i] for i in lookup])
+        print('predicate:', inp)
+        calculate_csp_value(k, inp)
+        print()
+```
