@@ -29,7 +29,7 @@ def calculate_csp_value(k, inp):
 
     # The mixture function of the spin glass model
     # is determined by the Fourier weights of the CSP.
-    value = parisi_one_jump_approx(weights)
+    value = parisi_one_piece_approx(weights)
 
     avg_pm_one = average_value_pm_one(inp)
     print("For -1/+1 output, with a*n clauses:",

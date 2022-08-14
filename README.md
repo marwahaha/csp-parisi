@@ -52,14 +52,14 @@ python -i get_parisi_value.py
 
 ```python
 C_p_squared = [0, 0, 0, 1/2]
-parisi_one_jump_approx(C_p_squared) # outputs Parisi value
+parisi_one_piece_approx(C_p_squared) # outputs Parisi value
 ```
 
 The mixture function does not include $c_0$, so the 0th entry of `C_p_squared` is ignored.
 
-This code only optimizes over piecewise constant functions with one jump.
-It is reasonably fast (~1 second to run), and is >99.5% accurate on known results.
-You can run `verify_parisi_one_jump_accuracy()` to double-check the accuracy claims.
+This code only optimizes over piecewise constant functions with one piece.
+It is reasonably fast (~1 second to run), and is >99% accurate on known results.
+You can run `verify_parisi_one_piece_accuracy()` to double-check the accuracy claims.
 
 
 ### Get more accurate Parisi value, given list of mixture function coefficients $[-, c_1^2, c_2^2, ...]$
@@ -70,15 +70,15 @@ python -i get_parisi_value.py
 
 ```python
 C_p_squared = [0, 0, 0, 1/2]
-r = 2           # number of jumps
+r = 2           # number of pieces
 max_z = 20      # approximate Gaussian integral from -20σ to 20σ
-num_pts = 500   # approximate Gaussian integral with 500 points
+num_pts = 200   # approximate Gaussian integral with 500 points
 parisi_minimize(C_p_squared, r, max_z, num_pts) # outputs Parisi value
 ```
 
 The mixture function does not include $c_0$, so the 0th entry of `C_p_squared` is ignored.
 
-This code optimizes over piecewise constant functions with $r$ jumps.
+This code optimizes over piecewise constant functions with $r$ pieces.
 Be careful! The runtime is $ \Omega( num_pts^{r+1} ) $.
 This example above may take 15 minutes on a laptop.
 

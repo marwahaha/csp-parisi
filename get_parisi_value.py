@@ -6,9 +6,11 @@ from scipy.integrate import quad
 
 def a(qs, l, xiprime):
     """
-    a_l^2 = xi'(q_{l+1}) - xi'(q_l)
+    a_l^2 = xi'(q_{l}) - xi'(q_{l-1})
     """
-    return ( xiprime(qs[l+1]) - xiprime(qs[l]) )**0.5
+    if l == 0:
+        return xiprime(0)**0.5
+    return ( xiprime(qs[l]) - xiprime(qs[l-1]) )**0.5
 
 
 def psi0(qs, ms, xiprime, r):
@@ -29,13 +31,11 @@ def psi0(qs, ms, xiprime, r):
     start = np.abs(start)
 
     # l = 1...r
-    for i in list(range(1, r+1))[::-1]:
-        start = np.log(np.sum(np.exp(ms[i]*start)*PDF_INPS, axis=i))/ms[i]
+    for i in list(range(r))[::-1]:
+        start = np.log(np.sum(np.exp(ms[i]*start)*PDF_INPS, axis=i+1))/ms[i]
 
     # l = 0
-    start = np.sum(PDF_INPS*start, axis=0)
-
-    return start
+    return np.mean(start)
 
 
 def penalty(qs, ms, t_times_xiprimeprime, r):
@@ -44,7 +44,7 @@ def penalty(qs, ms, t_times_xiprimeprime, r):
     This is equal to 0.5 Sum_{i=0}^k [ m_i Integral[ t xi''(t) dt ] from q_i to q_{i+1} ].
     """
     out = 0
-    for i in range(r+1):
+    for i in range(r):
         integral = quad(t_times_xiprimeprime, qs[i], qs[i+1])[0]
         out += ms[i] * integral
     return 0.5 * out
@@ -64,22 +64,21 @@ def make_parisi_calculator(xiprime, t_times_xiprimeprime, r):
     and outputs the value of the Parisi functional.
 
     The function is described as
-    0  : [ 0 , q_1)
-    m_1: [q_1, q_2)
-    m_2: [q_2, q_3)
+    m_1: [ 0, q_1)
+    m_2: [q_1, q_2)
     ...
-    m_r: [q_r, 1)
+    m_r: [q_{r-1}, 1)
     """
     def parisi_calculator(inp):
-        # assert len(inp) == 2*r
-        inp_qs, inp_ms= inp[:r], inp[r:]
+        # assert len(inp) == 2*r - 1
+        inp_ms, inp_qs= inp[:r], inp[r:]
 
         # if bad input, return a large number
         if np.any(np.array(inp) < 0) or sum(inp_qs) > 1:
             return 10000
 
-        qs = np.array([0,*[sum(inp_qs[:i+1]) for i in range(r)],1])
-        ms = np.array([0,*[sum(inp_ms[:i+1]) for i in range(r)]])
+        qs = np.array([0,*[sum(inp_qs[:i+1]) for i in range(r-1)],1])
+        ms = np.array([*[sum(inp_ms[:i+1]) for i in range(r)]])
         output = parisi_value(qs, ms, xiprime, t_times_xiprimeprime, r)
         return output
 
@@ -106,7 +105,7 @@ def approximate_gaussian_integral(max_z, num_pts, r):
     especially for higher coefficients.
 
     Calculating the Parisi value has runtime
-    Omega( num_pts^(r+1) ), where r is the number of jumps.
+    Omega( num_pts^(r+1) ), where r is the number of pieces.
     """
 
     global INPS, PDF_INPS, GRID
@@ -124,7 +123,7 @@ def parisi_minimize(C_p_squared, r, max_z, num_pts):
     """
     Takes in:
         * coefficients of mixture function, specified as [c_0^2, c_1^2, c_2^2, ...],
-        * r (number of jumps)
+        * r (number of pieces)
         * Gaussian integral precision (max_z score and number of points).
 
     Uses SciPy to minimize the Parisi functional.
@@ -155,20 +154,20 @@ def parisi_minimize(C_p_squared, r, max_z, num_pts):
         calculator = lambda *args: 0
 
     return minimize(calculator,
-                    [np.random.random()/r for _ in range(2*r)],
+                    [np.random.random()/r for _ in range(2*r-1)],
                     method='Powell',
                     options={"xtol": 1e-10, "ftol":1e-14}
                    )
 
 
-def parisi_one_jump_approx(C_p_squared, print_output = False):
+def parisi_one_piece_approx(C_p_squared, print_output = False):
     """
     Finds the minimum Parisi value
     among piecewise constant functions
-    with r=1 jump.
+    with r=1 piece.
 
     This is a reasonable approximation to known values:
-        >99.7% close for Max 2XOR/MaxCut
+        >99% close for Max 2XOR/MaxCut
         >99.95% close for Max 3XOR
     """
 
@@ -183,15 +182,15 @@ def parisi_one_jump_approx(C_p_squared, print_output = False):
     return float(opt.fun)
 
 
-def verify_parisi_one_jump_accuracy():
+def verify_parisi_one_piece_accuracy():
     """
     Code that asserts the accuracy claims made above.
 
     reference for known values:
     https://arxiv.org/pdf/2009.11481.pdf
     """
-    print("Claim: Max 2XOR is 99.7% accurate.")
-    assert np.isclose(parisi_one_jump_approx([0, 0, 1/2]), 0.763168, rtol=3e-3), "Max 2XOR is not 99.7% accurate"
+    print("Claim: Max 2XOR is 99% accurate.")
+    assert np.isclose(parisi_one_piece_approx([0, 0, 1/2]), 0.763168, rtol=1e-2), "Max 2XOR is not 99% accurate"
     print("Claim: Max 3XOR is 99.95% accurate.")
-    assert np.isclose(parisi_one_jump_approx([0, 0, 0, 1/2]), 0.8132, rtol=5e-4), "Max 3XOR is not 99.95% accurate"
+    assert np.isclose(parisi_one_piece_approx([0, 0, 0, 1/2]), 0.8132, rtol=5e-4), "Max 3XOR is not 99.95% accurate"
     print("Claims are correct.")
