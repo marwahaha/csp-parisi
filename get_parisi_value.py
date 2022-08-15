@@ -42,6 +42,8 @@ def psi0(qs, ms, xiprime, r):
 
     # Integrating out z_1...z_{r-1}.
     for i in list(range(r-1))[::-1]:
+        # I verified that multiplying by a NumPy 1D-array is like
+        #   weighting the values along the innermost (last) axis (which is then summed over).
         start = np.log(np.sum(np.exp(ms[i]*start)*PDF_INPS, axis=i+1))/ms[i]
 
     # Integrating out z_0.
