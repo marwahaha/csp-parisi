@@ -52,14 +52,14 @@ python -i get_parisi_value.py
 
 ```python
 C_p_squared = [0, 0, 0, 1/2]
-parisi_one_piece_approx(C_p_squared) # outputs Parisi value
+parisi_two_piece_approx(C_p_squared) # outputs Parisi value
 ```
 
 The mixture function does not include $c_0$, so the 0th entry of `C_p_squared` is ignored.
 
-This code only optimizes over piecewise constant functions with one piece.
-It is reasonably fast (~1 second to run), and is >99% accurate on known results.
-You can run `verify_parisi_one_piece_accuracy()` to double-check the accuracy claims.
+This code only optimizes over piecewise constant functions with two pieces.
+It is reasonably fast (~15 seconds to run), and is >99% accurate on known results.
+You can run `verify_parisi_two_piece_accuracy()` to double-check the accuracy claims.
 
 
 ### Get more accurate Parisi value, given list of mixture function coefficients $[-, c_1^2, c_2^2, ...]$
