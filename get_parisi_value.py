@@ -31,6 +31,8 @@ def psi0(qs, ms, xiprime, r):
     start = sum([a_s[i]*GRID[i] for i in range(r)])
 
     # Clever integration to analytically calculate the innermost Gaussian average (z_r).
+    # Split abs(\sum_i x_i a_i) into positive and negative cases,
+    #   and do the 1-D Gaussian integral in each case.
     tau = start * (-1)/a_s[r]
     phi_positive_mean = stats.norm.cdf(tau - ms[r-1]*a_s[r])
     phi_negative_mean = stats.norm.cdf(tau + ms[r-1]*a_s[r])
