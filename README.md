@@ -70,7 +70,7 @@ python -i get_parisi_value.py
 
 ```python
 C_p_squared = [0, 0, 0, 1/2]
-r = 2           # number of pieces
+r = 3           # number of pieces
 max_z = 20      # approximate Gaussian integral from -20σ to 20σ
 num_pts = 200   # approximate Gaussian integral with 500 points
 parisi_minimize(C_p_squared, r, max_z, num_pts) # outputs Parisi value
@@ -79,7 +79,7 @@ parisi_minimize(C_p_squared, r, max_z, num_pts) # outputs Parisi value
 The mixture function does not include $c_0$, so the 0th entry of `C_p_squared` is ignored.
 
 This code optimizes over piecewise constant functions with $r$ pieces.
-Be careful! The runtime is $ \Omega( num_pts^{r+1} ) $.
+Be careful! The runtime is $\Omega($ num_pts $^{r})$.
 This example above may take 15 minutes on a laptop.
 
 ### Get values for all Boolean predicates
